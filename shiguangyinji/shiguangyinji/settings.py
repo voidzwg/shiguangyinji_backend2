@@ -140,7 +140,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-<<<<<<< Updated upstream
 CORS_ORIGIN_WHITELIST = (
     '*',
 )
@@ -168,7 +167,4 @@ CORS_ALLOW_CREDENTIALS = True
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = 'media/'
 IMAGE_TAIL = ('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff')
-=======
-# AUTH_USER_MODEL = 'usermanage.User'
-
->>>>>>> Stashed changes
+AUTH_USER_MODEL = 'usermanage.User'
