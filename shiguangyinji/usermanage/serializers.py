@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password
 
 User = get_user_model()
 
+
 class RegisterSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
 
@@ -21,3 +22,17 @@ class RegisterSerializer(serializers.ModelSerializer):
         validated_data.pop('confirm_password')
         validated_data['password'] = make_password(validated_data['password'])
         return User.objects.create(**validated_data)
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['nickname', 'introduction', 'avatar']
+
+    def update(self, instance, validated_data):
+        instance.nickname = validated_data.get('nickname', instance.nickname)
+        instance.introduction = validated_data.get('introduction', instance.introduction)
+        if 'avatar' in validated_data:
+            instance.avatar = validated_data['avatar']
+        instance.save()
+        return instance

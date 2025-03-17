@@ -1,14 +1,18 @@
+import os
+
 from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth.models import AnonymousUser
+from django.http import HttpResponse
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .serializers import RegisterSerializer
+from .serializers import RegisterSerializer, UserProfileSerializer
 
 User = get_user_model()
 
@@ -70,9 +74,61 @@ class CheckLoginStatusView(APIView):
 
 
 class LogoutView(APIView):
-    authentication_classes = [JWTAuthentication]  # 确保验证 JWT
-    permission_classes = [IsAuthenticated]  # 确保用户已认证
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         # 登出逻辑
         return Response(status=status.HTTP_200_OK)
+
+
+class GetUserProfileView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if isinstance(request.user, AnonymousUser):
+            return Response({"error": "用户未登录"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # 获取用户的昵称、简介、文章数和粉丝数
+        user_profile = {
+            "nickname": request.user.nickname,
+            "introduction": request.user.introduction,
+            "article_count": request.user.article,
+            "fans_count": request.user.fans
+        }
+
+        return Response(user_profile, status=status.HTTP_200_OK)
+
+
+class EditUserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
+
+    def put(self, request):
+        user = request.user
+        serializer = UserProfileSerializer(user, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "个人资料更新成功"}, status=200)
+        return Response(serializer.errors, status=400)
+
+
+class GetUserAvatarView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # 检查用户是否已登录
+        if not request.user.is_authenticated:
+            return Response({"error": "用户未登录"}, status=401)
+
+        # 假设 `avatar` 字段保存的是图片文件名
+        avatar_filename = request.user.avatar  # e.g., 'avatars/suin.png'
+
+        # 构建返回的图片URL，确保你返回的URL是基于你的项目地址
+        avatar_url = f"http://127.0.0.1:8000/media/{avatar_filename}"
+
+        # 返回图片的URL
+        return Response({"avatar_url": avatar_url}, status=200)
