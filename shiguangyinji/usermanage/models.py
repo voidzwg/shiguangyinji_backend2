@@ -10,7 +10,7 @@ class User(AbstractUser):
     introduction = models.CharField(default="", max_length=255)
     article = models.IntegerField(default=0)
     fans = models.IntegerField(default=0)
-    avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png', blank=True, null=True)
+    avatar = models.ImageField(upload_to='avatars/', default='avatars/avatar.png', blank=True, null=True)
 
     class Meta:
         db_table = 'users'
