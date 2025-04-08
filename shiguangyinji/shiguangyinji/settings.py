@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'aichat',
     'usermanage',
+    'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
 ]
 
@@ -99,7 +100,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': 3306,
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'zwg1454101799',
     }
 }
 
@@ -180,4 +181,21 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',    # DRF Token 认证
         'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT 认证
     ),
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+'ROTATE_REFRESH_TOKENS': False,
+'BLACKLIST_AFTER_ROTATION': True,
+'ALGORITHM': 'HS256',
+'SIGNING_KEY': SECRET_KEY,
+'AUTH_HEADER_TYPES': ('Bearer',),
+'USER_ID_FIELD': 'id',
+'USER_ID_CLAIM': 'user_id',
+'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+'TOKEN_TYPE_CLAIM': 'token_type',
+'JTI_CLAIM': 'jti',
 }

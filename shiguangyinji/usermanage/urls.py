@@ -4,8 +4,6 @@ from .views import RegisterView, CheckUsernameExistView, CheckPhoneExistView, Lo
     LogoutView, GetUserProfileView, EditUserProfileView, GetUserAvatarView
 
 urlpatterns = [
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', RegisterView.as_view(), name='register'),
     path('check-username/', CheckUsernameExistView.as_view(), name='check-username-exist'),
     path('check-phone/', CheckPhoneExistView.as_view(), name='check-phone-exist'),

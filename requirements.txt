@@ -4,3 +4,6 @@ requests
 pyyaml
 django-cors-headers
 pytz
+djangorestframework
+djangorestframework-simplejwt
+pillow
