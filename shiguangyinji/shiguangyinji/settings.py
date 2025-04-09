@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'aichat',
     'usermanage',
+    'issue',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
 ]
